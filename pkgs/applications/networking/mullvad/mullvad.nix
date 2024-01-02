@@ -9,7 +9,7 @@ rustPlatform.buildRustPackage rec {
     owner = "mullvad";
     repo = "mullvadvpn-app";
     rev = version;
-    hash = "";
+    hash = "sha256-tkJyaSaWnaPP+TQbV8A/XnyZdNDq7ywrh4yG5b1cs8Q=";
   };
 
   cargoLock = {
