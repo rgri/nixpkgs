@@ -1,33 +1,7 @@
-{ stdenv
-, lib
-, fetchurl
-, dpkg
-, alsa-lib
-, atk
-, cairo
-, cups
-, dbus
-, expat
-, fontconfig
-, freetype
-, gdk-pixbuf
-, glib
-, pango
-, nspr
-, nss
-, gtk3
-, mesa
-, libGL
-, wayland
-, xorg
-, autoPatchelfHook
-, systemd
-, libnotify
-, libappindicator
-, makeWrapper
-, coreutils
-, gnugrep
-}:
+{ stdenv, lib, fetchurl, dpkg, alsa-lib, atk, cairo, cups, dbus, expat
+, fontconfig, freetype, gdk-pixbuf, glib, pango, nspr, nss, gtk3, mesa, libGL
+, wayland, xorg, autoPatchelfHook, systemd, libnotify, libappindicator
+, makeWrapper, coreutils, gnugrep }:
 
 let
   deps = [
@@ -64,9 +38,11 @@ let
     systemd
   ];
 
-  version = "2023.6";
+  version = "2024.1-beta1";
 
-  selectSystem = attrs: attrs.${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
+  selectSystem = attrs:
+    attrs.${stdenv.hostPlatform.system} or (throw
+      "Unsupported system: ${stdenv.hostPlatform.system}");
 
   platform = selectSystem {
     x86_64-linux = "amd64";
@@ -74,25 +50,21 @@ let
   };
 
   hash = selectSystem {
-    x86_64-linux = "sha256-IhE93NXX8iwlvso+ei9wbVyJJLtkjrZf8qB43AZre+4=";
+    x86_64-linux = "sha256-0pw7Co8auO8t2/tndpTkEvt1lutaU5r9j1oSMm/D0/M=";
     aarch64-linux = "sha256-HRAGDps0Cf7qOWTS7die9uouxMpAaM83t1Ixz7ElF6g=";
   };
-in
 
-stdenv.mkDerivation {
+in stdenv.mkDerivation {
   pname = "mullvad-vpn";
   inherit version;
 
   src = fetchurl {
-    url = "https://github.com/mullvad/mullvadvpn-app/releases/download/${version}/MullvadVPN-${version}_${platform}.deb";
+    url =
+      "https://github.com/mullvad/mullvadvpn-app/releases/download/${version}/MullvadVPN-${version}_${platform}.deb";
     inherit hash;
   };
 
-  nativeBuildInputs = [
-    autoPatchelfHook
-    dpkg
-    makeWrapper
-  ];
+  nativeBuildInputs = [ autoPatchelfHook dpkg makeWrapper ];
 
   buildInputs = deps;
 
@@ -101,7 +73,8 @@ stdenv.mkDerivation {
 
   unpackPhase = "dpkg-deb -x $src .";
 
-  runtimeDependencies = [ (lib.getLib systemd) libGL libnotify libappindicator wayland ];
+  runtimeDependencies =
+    [ (lib.getLib systemd) libGL libnotify libappindicator wayland ];
 
   installPhase = ''
     runHook preInstall
@@ -132,7 +105,8 @@ stdenv.mkDerivation {
   meta = with lib; {
     homepage = "https://github.com/mullvad/mullvadvpn-app";
     description = "Client for Mullvad VPN";
-    changelog = "https://github.com/mullvad/mullvadvpn-app/blob/${version}/CHANGELOG.md";
+    changelog =
+      "https://github.com/mullvad/mullvadvpn-app/blob/${version}/CHANGELOG.md";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     license = licenses.gpl3Only;
     platforms = [ "x86_64-linux" "aarch64-linux" ];
