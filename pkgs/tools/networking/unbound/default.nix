@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , fetchurl
+, fetchpatch
 , openssl
 , nettle
 , expat
@@ -46,13 +47,13 @@
 , gnutls
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation (finalAttrs: {
   pname = "unbound";
-  version = "1.18.0";
+  version = "1.19.0";
 
   src = fetchurl {
-    url = "https://nlnetlabs.nl/downloads/unbound/unbound-${version}.tar.gz";
-    hash = "sha256-PalUkKhc/2Qg8m+uC4Skn1ES3xvxt/w0+HJPAggstxI=";
+    url = "https://nlnetlabs.nl/downloads/unbound/unbound-${finalAttrs.version}.tar.gz";
+    hash = "sha256-qXUyRohUxhwt5IykFw3oVP07yVyAQ7sM+w/iZgWWZiQ=";
   };
 
   outputs = [ "out" "lib" "man" ]; # "dev" would only split ~20 kB
@@ -147,7 +148,7 @@ stdenv.mkDerivation rec {
   + ''substituteInPlace "$lib/lib/libunbound.la" ''
   + lib.concatMapStrings
     (pkg: lib.optionalString (pkg ? dev) " --replace '-L${pkg.dev}/lib' '-L${pkg.out}/lib' --replace '-R${pkg.dev}/lib' '-R${pkg.out}/lib'")
-    (builtins.filter (p: p != null) buildInputs);
+    (builtins.filter (p: p != null) finalAttrs.buildInputs);
 
   passthru.tests = {
     inherit gnutls;
@@ -159,7 +160,7 @@ stdenv.mkDerivation rec {
     description = "Validating, recursive, and caching DNS resolver";
     license = licenses.bsd3;
     homepage = "https://www.unbound.net";
-    maintainers = with maintainers; [ ajs124 ];
+    maintainers = lib.teams.helsinki-systems.members;
     platforms = platforms.unix;
   };
-}
+})

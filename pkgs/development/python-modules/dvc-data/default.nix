@@ -14,16 +14,16 @@
 
 buildPythonPackage rec {
   pname = "dvc-data";
-  version = "2.18.1";
-  format = "pyproject";
+  version = "3.5.0";
+  pyproject = true;
 
   disabled = pythonOlder "3.8";
 
   src = fetchFromGitHub {
     owner = "iterative";
-    repo = pname;
+    repo = "dvc-data";
     rev = "refs/tags/${version}";
-    hash = "sha256-JL72tenKmsWanHl6+olpx7SkFLmFoTyctl+2TnnKcAI=";
+    hash = "sha256-vLSb+RIaebF+ili+6bvU8wplcpycPVRadUkhkLHdqi8=";
   };
 
   SETUPTOOLS_SCM_PRETEND_VERSION = version;
@@ -44,11 +44,6 @@ buildPythonPackage rec {
 
   # Tests depend on upath which is unmaintained and only available as wheel
   doCheck = false;
-
-  postPatch = ''
-    substituteInPlace setup.cfg \
-      --replace "dvc-objects==" "dvc-objects>="
-  '';
 
   pythonImportsCheck = [
     "dvc_data"

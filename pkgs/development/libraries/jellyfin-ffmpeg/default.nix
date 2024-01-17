@@ -9,13 +9,13 @@
   nv-codec-headers-11 = nv-codec-headers-12;
 }).overrideAttrs (old: rec {
   pname = "jellyfin-ffmpeg";
-  version = "6.0-6";
+  version = "6.0-7";
 
   src = fetchFromGitHub {
     owner = "jellyfin";
     repo = "jellyfin-ffmpeg";
     rev = "v${version}";
-    sha256 = "sha256-jOKVS+BMADS/jIagOnYwxeGTpTMySmGlOHkPD2LJdkA=";
+    sha256 = "sha256-Z4getn/mVYIRANkIOyt7jMpcqHBvq5GXLK/ST5zV1r4=";
   };
 
   buildInputs = old.buildInputs ++ [ chromaprint ];
@@ -39,5 +39,6 @@
     homepage = "https://github.com/jellyfin/jellyfin-ffmpeg";
     license = licenses.gpl3;
     maintainers = with maintainers; [ justinas ];
+    pkgConfigModules = [ "libavutil" ];
   };
 })

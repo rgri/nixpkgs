@@ -13,11 +13,11 @@
 
 stdenv.mkDerivation rec {
   pname = "appflowy";
-  version = "0.3.5";
+  version = "0.3.8";
 
   src = fetchzip {
     url = "https://github.com/AppFlowy-IO/appflowy/releases/download/${version}/AppFlowy-${version}-linux-x86_64.tar.gz";
-    hash = "sha256-NKoRsT8UQ1IHS95KATHNzbAYWCi6zwwmRZvR+U7MVhk=";
+    hash = "sha256-3ICeKSqzx1zp/KpaAFl9qLSaugWm4HZrKjrDCWz9ok4=";
     stripRoot = false;
   };
 

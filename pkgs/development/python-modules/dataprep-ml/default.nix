@@ -23,16 +23,16 @@ let
 in
 buildPythonPackage rec {
   pname = "dataprep-ml";
-  version = "0.0.18";
+  version = "0.0.21";
   pyproject = true;
 
-  disable = pythonOlder "3.8";
+  disabled = pythonOlder "3.8";
 
   # using PyPI as github repo does not contain tags or release branches
   src = fetchPypi {
     pname = "dataprep_ml";
     inherit version;
-    hash = "sha256-nIqyRwv62j8x5Fy7ILMLWxw6yJmkkNRE1zyUlfvRYTI=";
+    hash = "sha256-BtnRmj5JtgNdCFowgNdpIZn5vUdw8QYCWneHfDgC4/c=";
   };
 
   nativeBuildInputs = [

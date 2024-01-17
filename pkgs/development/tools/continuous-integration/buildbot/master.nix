@@ -24,13 +24,18 @@
 , moto
 , markdown
 , lz4
-, setuptoolsTrial
+, setuptools-trial
 , buildbot-worker
 , buildbot-plugins
 , buildbot-pkg
 , parameterized
 , git
 , openssh
+, setuptools
+, croniter
+, importlib-resources
+, packaging
+, unidiff
 , glibcLocales
 , nixosTests
 , callPackage
@@ -65,14 +70,14 @@ let
 
   package = buildPythonApplication rec {
     pname = "buildbot";
-    version = "3.9.2";
-    format = "setuptools";
+    version = "3.10.1";
+    format = "pyproject";
 
-    disabled = pythonOlder "3.7";
+    disabled = pythonOlder "3.8";
 
     src = fetchPypi {
       inherit pname version;
-      hash = "sha256-7QhIMUpzmxbh8qjz0hgqzibLkWADhTV523neo1wpGSA=";
+      hash = "sha256-/J4jWoIZEObSZKw04Ib6h4AvJtfNwzwozRu+gFek1Dk=";
     };
 
     propagatedBuildInputs = [
@@ -88,6 +93,11 @@ let
       autobahn
       pyjwt
       pyyaml
+      setuptools
+      croniter
+      importlib-resources
+      packaging
+      unidiff
     ]
       # tls
       ++ twisted.optional-dependencies.tls;
@@ -100,7 +110,7 @@ let
       moto
       markdown
       lz4
-      setuptoolsTrial
+      setuptools-trial
       buildbot-worker
       buildbot-pkg
       buildbot-plugins.www

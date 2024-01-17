@@ -1,6 +1,6 @@
 { lib
+, stdenvNoCC
 , fetchurl
-, mkDerivation
 , appimageTools
 , libsecret
 , makeWrapper
@@ -11,11 +11,11 @@
 }:
 let
   pname = "beeper";
-  version = "3.80.17";
+  version = "3.90.22";
   name = "${pname}-${version}";
   src = fetchurl {
-    url = "https://download.todesktop.com/2003241lzgn20jd/beeper-3.80.17-build-231010czwkkgnej.AppImage";
-    hash = "sha256-cfzfeM1czhZKz0HbbJw2PD3laJFg9JWppA2fKUb5szU=";
+    url = "https://download.todesktop.com/2003241lzgn20jd/beeper-3.90.22-build-2312219r0azbdcp.AppImage";
+    hash = "sha256-gLceLWdY/0yAveV3IdoLbqForFKqyU3a9QQOVEJ9TIg=";
   };
   appimage = appimageTools.wrapType2 {
     inherit version pname src;
@@ -25,7 +25,7 @@ let
     inherit version pname src;
   };
 in
-mkDerivation rec {
+stdenvNoCC.mkDerivation rec {
   inherit name pname version;
 
   src = appimage;

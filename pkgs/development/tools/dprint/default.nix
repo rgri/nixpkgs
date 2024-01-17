@@ -2,14 +2,14 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "dprint";
-  version = "0.41.0";
+  version = "0.43.0";
 
   src = fetchCrate {
     inherit pname version;
-    sha256 = "sha256-qPyHDQ6KcXwiWlys86L3cnLIxigEkXWD/IkB2+WtOcY=";
+    sha256 = "sha256-PUI58DBzPAMrqB4YeWVxGl+moYZfZwGCAiUIflKYK4Q=";
   };
 
-  cargoHash = "sha256-DauLzn+QkqTCPubrtasAZmD3DrIXkHk7zd8g589TCCk=";
+  cargoHash = "sha256-VZjQ2Q38cHblLwR2XioAjq0CAwWYOsvQ/1ps92Rl99U=";
 
   buildInputs = lib.optionals stdenv.isDarwin [ CoreFoundation Security ];
 

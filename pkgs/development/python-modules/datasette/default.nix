@@ -29,7 +29,7 @@
 
 buildPythonPackage rec {
   pname = "datasette";
-  version = "0.64.5";
+  version = "0.64.6";
   format = "setuptools";
 
   disabled = pythonOlder "3.8";
@@ -38,12 +38,12 @@ buildPythonPackage rec {
     owner = "simonw";
     repo = pname;
     rev = "refs/tags/${version}";
-    hash = "sha256-cCzvltq3DFbfRp0gO8RQxGUwBtYJcJoeYHIz06FA7vM=";
+    hash = "sha256-chU0AFaVfkJMRwraX/Ky0e6/g3ZSZ2efNIJ15veqFmg=";
   };
 
   postPatch = ''
     substituteInPlace setup.py \
-      --replace '"pytest-runner"' "
+      --replace '"pytest-runner"' ""
   '';
 
   propagatedBuildInputs = [

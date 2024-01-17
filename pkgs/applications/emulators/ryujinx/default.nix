@@ -28,17 +28,17 @@
 
 buildDotnetModule rec {
   pname = "ryujinx";
-  version = "1.1.1044"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yml
+  version = "1.1.1102"; # Based off of the official github actions builds: https://github.com/Ryujinx/Ryujinx/actions/workflows/release.yml
 
   src = fetchFromGitHub {
     owner = "Ryujinx";
     repo = "Ryujinx";
-    rev = "7afae8c69947f7a5fa9a55cee36381aef372dfba";
-    sha256 = "1kf95sbb4p50b6bah75sd95660kk2a7cbjwgvqv4c4cal6c126g7";
+    rev = "f11d663df73f68350820dfa65aa51a8a9b9ffd0f";
+    sha256 = "15yai8zwwy2537ng6iqyg2jhv0q2w1c9rahkdkbvgkwiycsl7rjy";
   };
 
-  dotnet-sdk = dotnetCorePackages.sdk_7_0;
-  dotnet-runtime = dotnetCorePackages.runtime_7_0;
+  dotnet-sdk = dotnetCorePackages.sdk_8_0;
+  dotnet-runtime = dotnetCorePackages.runtime_8_0;
 
   nugetDeps = ./deps.nix;
 

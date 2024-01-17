@@ -19,22 +19,21 @@
 , tornado
 , urllib3
 , versioneer
-, wheel
 , zict
 }:
 
 buildPythonPackage rec {
   pname = "distributed";
-  version = "2023.8.1";
-  format = "pyproject";
+  version = "2023.12.0";
+  pyproject = true;
 
-  disabled = pythonOlder "3.8";
+  disabled = pythonOlder "3.9";
 
   src = fetchFromGitHub {
     owner = "dask";
-    repo = pname;
+    repo = "distributed";
     rev = "refs/tags/${version}";
-    hash = "sha256-HJyqDi5MqxEjAWWv8ZqNGAzeFn5rZGPwiDz5KaCm6Xk=";
+    hash = "sha256-Zv31BTzY31eXkU7wqa+h33qGrH+OTzKEj6L7Ei/aizk=";
   };
 
   postPatch = ''

@@ -5,13 +5,13 @@
 
 buildGoModule rec {
   pname = "jwx";
-  version = "2.0.13";
+  version = "2.0.18";
 
   src = fetchFromGitHub {
     owner = "lestrrat-go";
     repo = pname;
     rev = "v${version}";
-    hash = "sha256-jtNG/d70Q67IKKEfRBewl40cxH6wYj3CPfx+S/vuQnQ=";
+    hash = "sha256-HQJu22bMgL4UbJx0+JLgGDYnyT9lO2De04tZibAcVdM=";
   };
 
   vendorHash = "sha256-o3EHPIXGLz/io0d8jhl9cxzctP3CeOjEDMQl1SY9lXg=";

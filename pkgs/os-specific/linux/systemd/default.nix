@@ -105,6 +105,8 @@
 , withLibBPF ? lib.versionAtLeast buildPackages.llvmPackages.clang.version "10.0"
     && (stdenv.hostPlatform.isAarch -> lib.versionAtLeast stdenv.hostPlatform.parsed.cpu.version "6") # assumes hard floats
     && !stdenv.hostPlatform.isMips64   # see https://github.com/NixOS/nixpkgs/pull/194149#issuecomment-1266642211
+    # can't find gnu/stubs-32.h
+    && (stdenv.hostPlatform.isPower64 -> stdenv.hostPlatform.isBigEndian)
     # buildPackages.targetPackages.llvmPackages is the same as llvmPackages,
     # but we do it this way to avoid taking llvmPackages as an input, and
     # risking making it too easy to ignore the above comment about llvmPackages.
@@ -124,7 +126,7 @@
 , withRemote ? !stdenv.hostPlatform.isMusl
 , withResolved ? true
 , withShellCompletions ? true
-, withSysusers ? false # conflicts with the NixOS user management
+, withSysusers ? true
 , withSysupdate ? true
 , withTimedated ? true
 , withTimesyncd ? true
@@ -134,6 +136,8 @@
 , withUtmp ? !stdenv.hostPlatform.isMusl
   # tests assume too much system access for them to be feasible for us right now
 , withTests ? false
+  # build only libudev and libsystemd
+, buildLibsOnly ? false
 
   # name argument
 , pname ? "systemd"
@@ -142,13 +146,14 @@
 , docbook_xsl
 , docbook_xml_dtd_42
 , docbook_xml_dtd_45
+, withLogTrace ? false
 }:
 
 assert withImportd -> withCompression;
 assert withCoredump -> withCompression;
 assert withHomed -> withCryptsetup;
 assert withHomed -> withPam;
-assert withUkify -> withEfi;
+assert withUkify -> (withEfi && withBootloader);
 assert withRepart -> withCryptsetup;
 assert withBootloader -> withEfi;
 # passwdqc is not packaged in nixpkgs yet, if you want to fix this, please submit a PR.
@@ -157,7 +162,7 @@ assert !withPasswordQuality;
 let
   wantCurl = withRemote || withImportd;
   wantGcrypt = withResolved || withImportd;
-  version = "254.3";
+  version = "254.6";
 
   # Bump this variable on every (major) version change. See below (in the meson options list) for why.
   # command:
@@ -174,7 +179,7 @@ stdenv.mkDerivation (finalAttrs: {
     owner = "systemd";
     repo = "systemd-stable";
     rev = "v${version}";
-    hash = "sha256-ObnsAiKwhwEb4ti611eS/wGpg3Sss/pUy/gANPAbXbs=";
+    hash = "sha256-Ku24ecDeQt0t7A8/adR3Jm47QZ19+wdMPyJRzCxU4uU=";
   };
 
   # On major changes, or when otherwise required, you *must* reformat the patches,
@@ -201,6 +206,7 @@ stdenv.mkDerivation (finalAttrs: {
     ./0016-inherit-systemd-environment-when-calling-generators.patch
     ./0017-core-don-t-taint-on-unmerged-usr.patch
     ./0018-tpm2_context_init-fix-driver-name-checking.patch
+    ./0019-systemctl-edit-suggest-systemdctl-edit-runtime-on-sy.patch
   ] ++ lib.optional stdenv.hostPlatform.isMusl (
     let
       oe-core = fetchzip {
@@ -242,7 +248,10 @@ stdenv.mkDerivation (finalAttrs: {
     substituteInPlace src/ukify/ukify.py \
       --replace \
       "'readelf'" \
-      "'${targetPackages.stdenv.cc.bintools.targetPrefix}readelf'"
+      "'${targetPackages.stdenv.cc.bintools.targetPrefix}readelf'" \
+      --replace \
+      "/usr/lib/systemd/boot/efi" \
+      "$out/lib/systemd/boot/efi"
   '' + (
     let
       # The following patches references to dynamic libraries to ensure that
@@ -371,7 +380,7 @@ stdenv.mkDerivation (finalAttrs: {
     patchShebangs tools test src/!(rpm|kernel-install|ukify) src/kernel-install/test-kernel-install.sh
   '';
 
-  outputs = [ "out" "man" "dev" ];
+  outputs = [ "out" "dev" ] ++ (lib.optional (!buildLibsOnly) "man");
 
   nativeBuildInputs =
     [
@@ -435,7 +444,7 @@ stdenv.mkDerivation (finalAttrs: {
     ++ lib.optional withUkify (python3Packages.python.withPackages (ps: with ps; [ pefile ]))
   ;
 
-  #dontAddPrefix = true;
+  mesonBuildType = "release";
 
   mesonFlags = [
     "-Dversion-tag=${version}"
@@ -481,7 +490,6 @@ stdenv.mkDerivation (finalAttrs: {
     "-Dportabled=${lib.boolToString withPortabled}"
     "-Dhwdb=${lib.boolToString withHwdb}"
     "-Dremote=${lib.boolToString withRemote}"
-    "-Dsysusers=false"
     "-Dtimedated=${lib.boolToString withTimedated}"
     "-Dtimesyncd=${lib.boolToString withTimesyncd}"
     "-Duserdb=${lib.boolToString withUserDb}"
@@ -558,6 +566,8 @@ stdenv.mkDerivation (finalAttrs: {
   ] ++ lib.optionals withKmod [
     "-Dkmod=true"
     "-Dkmod-path=${kmod}/bin/kmod"
+  ] ++ lib.optionals withLogTrace [
+    "-Dlog-trace=true"
   ];
   preConfigure =
     let
@@ -697,7 +707,9 @@ stdenv.mkDerivation (finalAttrs: {
     export DESTDIR=/
   '';
 
-  postInstall = ''
+  mesonInstallTags = lib.optionals buildLibsOnly [ "devel" "libudev" "libsystemd" ];
+
+  postInstall = lib.optionalString (!buildLibsOnly) ''
     mkdir -p $out/example/systemd
     mv $out/lib/{binfmt.d,sysctl.d,tmpfiles.d} $out/example
     mv $out/lib/systemd/{system,user} $out/example/systemd
@@ -715,8 +727,10 @@ stdenv.mkDerivation (finalAttrs: {
     find $out -name "*kernel-install*" -exec rm {} \;
   '' + lib.optionalString (!withDocumentation) ''
     rm -rf $out/share/doc
-  '' + lib.optionalString withKmod ''
+  '' + lib.optionalString (withKmod && !buildLibsOnly) ''
     mv $out/lib/modules-load.d $out/example
+  '' + lib.optionalString withSysusers ''
+    mv $out/lib/sysusers.d $out/example
   '';
 
   # Avoid *.EFI binary stripping. At least on aarch64-linux strip
@@ -740,7 +754,7 @@ stdenv.mkDerivation (finalAttrs: {
     # To cross compile a derivation that builds a UKI with ukify, we need to wrap
     # ukify with the correct binutils. When wrapping, no splicing happens so we
     # have to explicitly pull binutils from targetPackages.
-    wrapProgram $out/lib/systemd/ukify --set PATH ${lib.makeBinPath [ targetPackages.stdenv.cc.bintools ] }
+    wrapProgram $out/lib/systemd/ukify --prefix PATH : ${lib.makeBinPath [ targetPackages.stdenv.cc.bintools ] }:${placeholder "out"}/lib/systemd
   '';
 
   disallowedReferences = lib.optionals (stdenv.buildPlatform != stdenv.hostPlatform)
@@ -773,6 +787,6 @@ stdenv.mkDerivation (finalAttrs: {
     # https://github.com/systemd/systemd/issues/20600#issuecomment-912338965
     broken = stdenv.hostPlatform.isStatic;
     priority = 10;
-    maintainers = with maintainers; [ flokli kloenk mic92 ];
+    maintainers = with maintainers; [ flokli kloenk ];
   };
 })

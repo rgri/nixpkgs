@@ -213,7 +213,6 @@
 , "sass"
 , "semver"
 , "serve"
-, "serverless"
 , "shout"
 , "sloc"
 , "smartdc"
@@ -309,5 +308,4 @@
 , "@yaegassy/coc-nginx"
 , "yalc"
 , "yarn"
-, "@zwave-js/server"
 ]

@@ -35,7 +35,7 @@ let
   ];
 in stdenv.mkDerivation (finalAttrs: {
   pname = "clr";
-  version = "5.7.0";
+  version = "5.7.1";
 
   outputs = [
     "out"
@@ -43,10 +43,10 @@ in stdenv.mkDerivation (finalAttrs: {
   ];
 
   src = fetchFromGitHub {
-    owner = "ROCm-Developer-Tools";
+    owner = "ROCm";
     repo = "clr";
     rev = "rocm-${finalAttrs.version}";
-    hash = "sha256-C+rFW/7kf35rz0sQTI2+iY5RhZZQY07fc5a+e6cB5OQ=";
+    hash = "sha256-1gZJhvBbUFdKH9p/7SRfzEV/fM+gIN2Qvlxf2VbmAIw=";
   };
 
   nativeBuildInputs = [
@@ -82,7 +82,7 @@ in stdenv.mkDerivation (finalAttrs: {
     "-DROCM_PATH=${rocminfo}"
 
     # Temporarily set variables to work around upstream CMakeLists issue
-    # Can be removed once https://github.com/ROCm-Developer-Tools/hipamd/issues/55 is fixed
+    # Can be removed once https://github.com/ROCm/rocm-cmake/issues/121 is fixed
     "-DCMAKE_INSTALL_BINDIR=bin"
     "-DCMAKE_INSTALL_INCLUDEDIR=include"
     "-DCMAKE_INSTALL_LIBDIR=lib"
@@ -122,7 +122,7 @@ in stdenv.mkDerivation (finalAttrs: {
   passthru = {
     # All known and valid general GPU targets
     # We cannot use this for each ROCm library, as each defines their own supported targets
-    # See: https://github.com/RadeonOpenCompute/ROCm/blob/77cbac4abab13046ee93d8b5bf410684caf91145/README.md#library-target-matrix
+    # See: https://github.com/ROCm/ROCm/blob/77cbac4abab13046ee93d8b5bf410684caf91145/README.md#library-target-matrix
     gpuTargets = lib.forEach [
       "803"
       "900"
@@ -144,6 +144,8 @@ in stdenv.mkDerivation (finalAttrs: {
       name = finalAttrs.pname;
       owner = finalAttrs.src.owner;
       repo = finalAttrs.src.repo;
+      page = "tags?per_page=1";
+      filter = ".[0].name | split(\"-\") | .[1]";
     };
 
     impureTests = {
@@ -159,10 +161,10 @@ in stdenv.mkDerivation (finalAttrs: {
 
   meta = with lib; {
     description = "AMD Common Language Runtime for hipamd, opencl, and rocclr";
-    homepage = "https://github.com/ROCm-Developer-Tools/clr";
+    homepage = "https://github.com/ROCm/clr";
     license = with licenses; [ mit ];
     maintainers = with maintainers; [ lovesegfault ] ++ teams.rocm.members;
     platforms = platforms.linux;
-    broken = versions.minor finalAttrs.version != versions.minor stdenv.cc.version;
+    broken = versions.minor finalAttrs.version != versions.minor stdenv.cc.version || versionAtLeast finalAttrs.version "6.0.0";
   };
 })

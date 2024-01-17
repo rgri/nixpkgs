@@ -13,6 +13,7 @@ let
       composerNoDev = previousAttrs.composerNoDev or true;
       composerNoPlugins = previousAttrs.composerNoPlugins or true;
       composerNoScripts = previousAttrs.composerNoScripts or true;
+      composerStrictValidation = previousAttrs.composerStrictValidation or true;
 
       nativeBuildInputs = (previousAttrs.nativeBuildInputs or [ ]) ++ [
         composer
@@ -69,7 +70,12 @@ let
         composerNoDev = previousAttrs.composerNoDev or true;
         composerNoPlugins = previousAttrs.composerNoPlugins or true;
         composerNoScripts = previousAttrs.composerNoScripts or true;
+        composerStrictValidation = previousAttrs.composerStrictValidation or true;
       };
+
+      COMPOSER_CACHE_DIR="/dev/null";
+      COMPOSER_DISABLE_NETWORK="1";
+      COMPOSER_MIRROR_PATH_REPOS="1";
 
       meta = previousAttrs.meta or { } // {
         platforms = lib.platforms.all;

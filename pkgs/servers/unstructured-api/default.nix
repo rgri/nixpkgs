@@ -21,7 +21,7 @@ let
     safetensors
     uvicorn
   ] ++ packages.unstructured.optional-dependencies.local-inference);
-  version = "0.0.53";
+  version = "0.0.59";
   unstructured_api_nltk_data = symlinkJoin {
     name = "unstructured_api_nltk_data";
 
@@ -35,7 +35,7 @@ in stdenvNoCC.mkDerivation {
     owner = "Unstructured-IO";
     repo = "unstructured-api";
     rev = version;
-    hash = "sha256-lD3f6ws3xGFZsC1wHoWydIkWOgIwXuZencle+jJ8T3Y=";
+    hash = "sha256-AYccSOPY3tW6ho1SNSYYDhKJXKtE3sUaT4g1toOfHSw=";
   };
 
   nativeBuildInputs = [ makeWrapper ];

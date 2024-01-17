@@ -5,16 +5,16 @@
 
 buildGoModule rec {
   pname = "url-parser";
-  version = "1.0.5";
+  version = "2.0.1";
 
   src = fetchFromGitHub {
     owner = "thegeeklab";
     repo = "url-parser";
     rev = "refs/tags/v${version}";
-    hash = "sha256-A+uoxwPdWdy12Avl2Ci+zd9TFmQFA22pMbsxtWpNPpc=";
+    hash = "sha256-g4fpyzDgIf/4kBAfNxLst0KKa+vNSCryljFAW1j8wmc=";
   };
 
-  vendorHash = "sha256-8doDVHyhQKsBeN1H73KV/rxhpumDLIzjahdjtW79Bek=";
+  vendorHash = "sha256-HOlX8oHktbgnbPkRf9iUMCUpGlbcQwusMMcHJJl2nOs=";
 
   ldflags = [
     "-s"
@@ -29,5 +29,6 @@ buildGoModule rec {
     changelog = "https://github.com/thegeeklab/url-parser/releases/tag/v${version}";
     license = licenses.mit;
     maintainers = with maintainers; [ doronbehar ];
+    mainProgram = "url-parser";
   };
 }

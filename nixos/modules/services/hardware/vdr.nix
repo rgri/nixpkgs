@@ -14,12 +14,8 @@ in {
     services.vdr = {
       enable = mkEnableOption (lib.mdDoc "VDR. Please put config into ${libDir}");
 
-      package = mkOption {
-        type = types.package;
-        default = pkgs.vdr;
-        defaultText = literalExpression "pkgs.vdr";
-        example = literalExpression "pkgs.wrapVdr.override { plugins = with pkgs.vdrPlugins; [ hello ]; }";
-        description = lib.mdDoc "Package to use.";
+      package = mkPackageOption pkgs "vdr" {
+        example = "wrapVdr.override { plugins = with pkgs.vdrPlugins; [ hello ]; }";
       };
 
       videoDir = mkOption {
@@ -49,6 +45,7 @@ in {
     systemd.services.vdr = {
       description = "VDR";
       wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
       serviceConfig = {
         ExecStart = ''
           ${cfg.package}/bin/vdr \

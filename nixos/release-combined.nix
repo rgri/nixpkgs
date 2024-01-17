@@ -79,6 +79,7 @@ in rec {
 
         (onFullSupported "nixos.tests.firewall")
         (onFullSupported "nixos.tests.fontconfig-default-fonts")
+        (onFullSupported "nixos.tests.gitlab")
         (onFullSupported "nixos.tests.gnome")
         (onFullSupported "nixos.tests.gnome-xorg")
         (onSystems ["x86_64-linux"] "nixos.tests.hibernate")
@@ -89,6 +90,7 @@ in rec {
         (onSystems ["x86_64-linux"] "nixos.tests.installer.btrfsSubvols")
         (onSystems ["x86_64-linux"] "nixos.tests.installer.luksroot")
         (onSystems ["x86_64-linux"] "nixos.tests.installer.lvm")
+        (onSystems ["x86_64-linux"] "nixos.tests.installer.separateBootZfs")
         (onSystems ["x86_64-linux"] "nixos.tests.installer.separateBootFat")
         (onSystems ["x86_64-linux"] "nixos.tests.installer.separateBoot")
         (onSystems ["x86_64-linux"] "nixos.tests.installer.simpleLabels")
@@ -96,6 +98,8 @@ in rec {
         (onSystems ["x86_64-linux"] "nixos.tests.installer.simpleUefiSystemdBoot")
         (onSystems ["x86_64-linux"] "nixos.tests.installer.simple")
         (onSystems ["x86_64-linux"] "nixos.tests.installer.swraid")
+        (onSystems ["x86_64-linux"] "nixos.tests.installer.zfsroot")
+        (onSystems ["x86_64-linux"] "nixos.tests.nixos-rebuild-specialisations")
         (onFullSupported "nixos.tests.ipv6")
         (onFullSupported "nixos.tests.keymap.azerty")
         (onFullSupported "nixos.tests.keymap.colemak")
@@ -162,7 +166,6 @@ in rec {
         (onFullSupported "nixos.tests.switchTest")
         (onFullSupported "nixos.tests.udisks2")
         (onFullSupported "nixos.tests.xfce")
-        (onSystems ["i686-linux"] "nixos.tests.zfs.installer")
         (onFullSupported "nixpkgs.emacs")
         (onFullSupported "nixpkgs.jdk")
         ["nixpkgs.tarball"]

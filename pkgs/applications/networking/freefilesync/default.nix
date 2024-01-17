@@ -15,9 +15,16 @@
 , makeDesktopItem
 }:
 
+let
+  wxGTK32' = wxGTK32.overrideAttrs (old: {
+    configureFlags = old.configureFlags ++ [
+      "--disable-exceptions"
+    ];
+  });
+in
 stdenv.mkDerivation (finalAttrs: {
   pname = "freefilesync";
-  version = "13.0";
+  version = "13.2";
 
   src = fetchurl {
     url = "https://freefilesync.org/download/FreeFileSync_${finalAttrs.version}_Source.zip";
@@ -26,7 +33,7 @@ stdenv.mkDerivation (finalAttrs: {
       rm -f $out
       tryDownload "$url"
     '';
-    hash = "sha256-E0lYKNCVtkdnhI3NPx8828Fz6sfmIm18KSC0NSWgHfQ=";
+    hash = "sha256-Hb3DkHdINtg5vNs6IcCHKxgSiN5u/2kY8V8Fnq5yFCM=";
   };
 
   sourceRoot = ".";
@@ -38,10 +45,11 @@ stdenv.mkDerivation (finalAttrs: {
       url = "https://sources.debian.org/data/main/f/freefilesync/12.0-2/debian/patches/ffs_devuan.patch";
       postFetch = ''
         substituteInPlace $out \
-          --replace "-std=c++2b" "-std=c++23"
+          --replace "-std=c++2b" "-std=c++23" \
+          --replace "imageWidth," "wxsizeToScreen(imageWidth),"
       '';
       excludes = [ "FreeFileSync/Source/ffs_paths.cpp" ];
-      hash = "sha256-CtUC94AoYTxoqSMWZrzuO3jTD46rj11JnbNyXtWckCo=";
+      hash = "sha256-LH549fJWGpJ0p6/0YNda1zZHGs/QRl1CYLC/vYKdkO4=";
     })
     # Fix build with GTK 3
     (fetchpatch {
@@ -63,7 +71,7 @@ stdenv.mkDerivation (finalAttrs: {
     gtk3
     libssh2
     openssl
-    wxGTK32
+    wxGTK32'
   ];
 
   env.NIX_CFLAGS_COMPILE = toString [

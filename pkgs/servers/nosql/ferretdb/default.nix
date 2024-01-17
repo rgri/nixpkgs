@@ -1,18 +1,18 @@
 { lib
-, buildGo121Module
+, buildGoModule
 , fetchFromGitHub
 , nixosTests
 }:
 
-buildGo121Module rec {
+buildGoModule rec {
   pname = "ferretdb";
-  version = "1.11.0";
+  version = "1.17.0";
 
   src = fetchFromGitHub {
     owner = "FerretDB";
     repo = "FerretDB";
     rev = "v${version}";
-    hash = "sha256-jasAfbE3CRlBJeyMnqKJBbmA+W/QnytGIUdyXR55EaU=";
+    hash = "sha256-GHUIr43rcA+H9FLQrrnTKLggyujGE0Is0VisLkL/EQI=";
   };
 
   postPatch = ''
@@ -20,7 +20,7 @@ buildGo121Module rec {
     echo nixpkgs     > build/version/package.txt
   '';
 
-  vendorHash = "sha256-5TjKGGEX66qNr2/25zRd7UESi03g7FI1AfEsW2mBcDE=";
+  vendorHash = "sha256-Mgc+TpK7XnRCT/CLDyW7fIs6jB2LbYlTceiytErIj+U=";
 
   CGO_ENABLED = 0;
 

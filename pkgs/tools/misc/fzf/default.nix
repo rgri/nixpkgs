@@ -8,7 +8,6 @@
 , bc
 , ncurses
 , perl
-, glibcLocales
 , testers
 , fzf
 }:
@@ -19,22 +18,22 @@ let
   # warnings on non-nixos machines
   ourPerl = if !stdenv.isLinux then perl else (
     writeShellScriptBin "perl" ''
-      export LOCALE_ARCHIVE="${glibcLocales}/lib/locale/locale-archive"
+      export PERL_BADLANG=0
       exec ${perl}/bin/perl "$@"
     '');
 in
 buildGoModule rec {
   pname = "fzf";
-  version = "0.43.0";
+  version = "0.45.0";
 
   src = fetchFromGitHub {
     owner = "junegunn";
     repo = pname;
     rev = version;
-    hash = "sha256-5voAO3vHygSo7rl9ELdb9BwMNFVZdjEe7x8foyi+a6s=";
+    hash = "sha256-oOAXV3TZ/E2b+P1sUy/oblSBkOF8VN1di7a7dWPmCbo=";
   };
 
-  vendorHash = "sha256-cv8KUXPRXufvbaZlvf/DeFfQCzu7MAlikRVPHWlakx0=";
+  vendorHash = "sha256-w/7Ds31mW1jnjkKVeaH81bLhasxNyy/SWeww20KhBrs=";
 
   CGO_ENABLED = 0;
 
@@ -60,6 +59,7 @@ buildGoModule rec {
     # Has a sneaky dependency on perl
     # Include first args to make sure we're patching the right thing
     substituteInPlace shell/key-bindings.bash \
+      --replace "command -v perl" "command -v ${ourPerl}/bin/perl" \
       --replace " perl -n " " ${ourPerl}/bin/perl -n "
     # fzf-tmux depends on bc
    substituteInPlace bin/fzf-tmux \
@@ -79,7 +79,10 @@ buildGoModule rec {
     install -D shell/* -t $out/share/fzf/
     install -D shell/key-bindings.fish $out/share/fish/vendor_functions.d/fzf_key_bindings.fish
     mkdir -p $out/share/fish/vendor_conf.d
-    echo fzf_key_bindings > $out/share/fish/vendor_conf.d/load-fzf-key-bindings.fish
+    cat << EOF > $out/share/fish/vendor_conf.d/load-fzf-key-bindings.fish
+      status is-interactive; or exit 0
+      fzf_key_bindings
+    EOF
 
     cat <<SCRIPT > $out/bin/fzf-share
     #!${runtimeShell}

@@ -17,11 +17,15 @@ in
 
   cask = callPackage ./manual-packages/cask { };
 
+  codeium = callPackage ./manual-packages/codeium { };
+
   consult-gh = callPackage ./manual-packages/consult-gh { };
 
   control-lock = callPackage ./manual-packages/control-lock { };
 
   ebuild-mode = callPackage ./manual-packages/ebuild-mode { };
+
+  el-easydraw = callPackage ./manual-packages/el-easydraw { };
 
   elisp-ffi = callPackage ./manual-packages/elisp-ffi { };
 
@@ -57,11 +61,15 @@ in
     inherit (pkgs) python3 git go gopls pyright;
   };
 
+  lspce = callPackage ./manual-packages/lspce { };
+
   matrix-client = callPackage ./manual-packages/matrix-client {
     _map = self.map;
   };
 
   mu4e = callPackage ./manual-packages/mu4e { };
+
+  notdeft = callPackage ./manual-packages/notdeft { };
 
   ott-mode = callPackage ./manual-packages/ott-mode { };
 
@@ -87,6 +95,8 @@ in
 
   wat-mode = callPackage ./manual-packages/wat-mode { };
 
+  xapian-lite = callPackage ./manual-packages/xapian-lite { };
+
   yes-no = callPackage ./manual-packages/yes-no { };
 
   youtube-dl = callPackage ./manual-packages/youtube-dl { };
@@ -105,4 +115,6 @@ in
   emacsSessionManagement = self.session-management-for-emacs;
   rectMark = self.rect-mark;
   sunriseCommander = self.sunrise-commander;
+
+  __attrsFailEvaluation = true;
 }

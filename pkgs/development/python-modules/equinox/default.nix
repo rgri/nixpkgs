@@ -1,6 +1,7 @@
 { lib
 , buildPythonPackage
 , fetchFromGitHub
+, fetchpatch
 , hatchling
 , jax
 , jaxlib
@@ -13,15 +14,23 @@
 
 buildPythonPackage rec {
   pname = "equinox";
-  version = "0.11.1";
+  version = "0.11.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "patrick-kidger";
     repo = "equinox";
     rev = "refs/tags/v${version}";
-    hash = "sha256-iYVAbUIZG90kgWger+M+DZmS/kQ3nEPXQFU+90lHgK0=";
+    hash = "sha256-qFTKiY/t2LCCWJBOSfaX0hYQInrpXgfhTc+J4iuyVbM=";
   };
+
+  patches = [
+    (fetchpatch {  # https://github.com/patrick-kidger/equinox/pull/601
+      name = "fix-wrong-PRNGKey-annotation";
+      url = "https://github.com/patrick-kidger/equinox/pull/601/commits/dce2fa1b7dcfd25d9573ce3186c5f6e8f79392bb.patch";
+      hash = "sha256-tlGV5xuNGLZTd1GlPwllybPz8tWHGHaCBdlsEuISm/0=";
+    })
+  ];
 
   nativeBuildInputs = [
     hatchling

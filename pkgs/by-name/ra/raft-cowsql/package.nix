@@ -11,13 +11,13 @@
 
 stdenv.mkDerivation rec {
   pname = "raft-cowsql";
-  version = "0.17.3";
+  version = "0.18.3";
 
   src = fetchFromGitHub {
     owner = "cowsql";
     repo = "raft";
     rev = "refs/tags/v${version}";
-    hash = "sha256-Ad09giGVsAVtm/0GRU/OaZx7BGjL5TlU8BrzFaFlE9k=";
+    hash = "sha256-lfmn+GfdgZ5fdp3Y6ROzEuXsrLNlH/qA98Ni5QAv0oQ=";
   };
 
   nativeBuildInputs = [ autoreconfHook pkg-config ];
@@ -41,9 +41,12 @@ stdenv.mkDerivation rec {
 
   outputs = [ "dev" "out" ];
 
-  passthru.tests = {
-    inherit incus;
-    updateScript = gitUpdater { };
+  passthru = {
+    inherit (incus) tests;
+
+    updateScript = gitUpdater {
+      rev-prefix = "v";
+    };
   };
 
   meta = with lib; {
@@ -51,6 +54,6 @@ stdenv.mkDerivation rec {
     homepage = "https://github.com/cowsql/raft";
     license = licenses.lgpl3Only;
     platforms = platforms.linux;
-    maintainers = with maintainers; [ adamcstephens ];
+    maintainers = teams.lxc.members;
   };
 }

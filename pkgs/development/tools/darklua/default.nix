@@ -7,16 +7,16 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "darklua";
-  version = "0.10.3";
+  version = "0.11.1";
 
   src = fetchFromGitHub {
     owner = "seaofvoices";
     repo = "darklua";
     rev = "v${version}";
-    hash = "sha256-OgQOsc6upMJveUUJSGqvopsyoKs7ALd6pVYxCi5fmS8=";
+    hash = "sha256-9ukhKAhN4dD36Em90Eox8o+7W1eXboG2xAE8+oPlhaI=";
   };
 
-  cargoHash = "sha256-qq42K4cPrWu/92P4dpegZ/0Wv2ndCb5d5+DgEKzdhbw=";
+  cargoHash = "sha256-hi9kzCwsw8c1tcvSsFV0do/jQ/KyDz3TcTEfOqHNxyw=";
 
   buildInputs = lib.optionals stdenv.isDarwin [
     darwin.apple_sdk.frameworks.CoreServices
