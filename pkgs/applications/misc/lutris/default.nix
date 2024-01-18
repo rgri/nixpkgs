@@ -1,57 +1,19 @@
-{ buildPythonApplication
-, lib
-, fetchFromGitHub
-, fetchpatch
+{ buildPythonApplication, lib, fetchFromGitHub, fetchpatch
 
-  # build inputs
-, atk
-, file
-, gdk-pixbuf
-, glib-networking
-, gnome-desktop
-, gobject-introspection
-, gst_all_1
-, gtk3
-, libnotify
-, pango
-, webkitgtk
-, wrapGAppsHook
+# build inputs
+, atk, file, gdk-pixbuf, glib-networking, gnome-desktop, gobject-introspection
+, gst_all_1, gtk3, libnotify, pango, webkitgtk, wrapGAppsHook
 
-  # check inputs
-, xvfb-run
-, nose2
-, flake8
+# check inputs
+, xvfb-run, nose2, flake8
 
-  # python dependencies
-, certifi
-, dbus-python
-, distro
-, evdev
-, lxml
-, pillow
-, pygobject3
-, pypresence
-, pyyaml
-, requests
-, protobuf
-, moddb
+# python dependencies
+, certifi, dbus-python, distro, evdev, lxml, pillow, pygobject3, pypresence
+, pyyaml, requests, protobuf, moddb
 
-  # commands that lutris needs
-, xrandr
-, pciutils
-, psmisc
-, glxinfo
-, vulkan-tools
-, xboxdrv
-, pulseaudio
-, p7zip
-, xgamma
-, libstrangle
-, fluidsynth
-, xorgserver
-, xorg
-, util-linux
-}:
+# commands that lutris needs
+, xrandr, pciutils, psmisc, glxinfo, vulkan-tools, xboxdrv, pulseaudio, p7zip
+, xgamma, libstrangle, fluidsynth, xorgserver, xorg, util-linux }:
 
 let
   # See lutris/util/linux.py
@@ -73,26 +35,26 @@ let
     # bypass mount suid wrapper which does not work in fhsenv
     util-linux
   ];
-in
-buildPythonApplication rec {
+in buildPythonApplication rec {
   pname = "lutris-unwrapped";
-  version = "0.5.14";
+  version = "0.5.16";
 
   src = fetchFromGitHub {
     owner = "lutris";
     repo = "lutris";
     rev = "v${version}";
-    hash = "sha256-h7oHFVqMJU1HuuUgh5oKXxr9uaIPHz7Q4gf8ONLzric=";
+    hash = "sha256-Ed1bhugBe97XmY050A5jCPcnLj0Fd7qPX2p/Ab+YbOE=";
   };
 
   # Backport patch to fix a failing test
   # FIXME: remove in next release
-  patches = [
-    (fetchpatch {
-      url = "https://github.com/lutris/lutris/commit/1f1d554df3b38da64fc65557ad619e55e050641e.patch";
-      hash = "sha256-kVK1RX6T1ijffWVU7VEt2fR62QpvI6VZebiKPgEE/N8=";
-    })
-  ];
+  # patches = [
+  #   (fetchpatch {
+  #     url =
+  #       "https://github.com/lutris/lutris/commit/1f1d554df3b38da64fc65557ad619e55e050641e.patch";
+  #     hash = "sha256-kVK1RX6T1ijffWVU7VEt2fR62QpvI6VZebiKPgEE/N8=";
+  #   })
+  # ];
 
   nativeBuildInputs = [ wrapGAppsHook gobject-introspection ];
   buildInputs = [
