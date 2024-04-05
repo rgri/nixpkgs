@@ -19,6 +19,7 @@ appimageTools.wrapType2 rec {
     in ''
       install -Dm444 ${contents}/thorium-browser.desktop $out/share/applications/thorium-browser.desktop
       install -Dm444 ${contents}/thorium.png $out/share/icons/hicolor/512x512/apps/thorium.png
+      mv $out/bin/thorium-browser* $out/bin/thorium-browser
     '';
 
   meta = with lib; {
