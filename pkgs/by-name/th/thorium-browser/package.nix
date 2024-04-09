@@ -6,12 +6,12 @@
 , vaapiVdpau, vulkan-loader, wayland, wget, xdg-utils, xfce, xorg, }:
 stdenv.mkDerivation rec {
   pname = "thorium-browser";
-  version = "120.0.6099.235";
+  version = "122.0.6261.132";
 
   src = fetchurl {
     url =
       "https://github.com/Alex313031/thorium/releases/download/M${version}/thorium-browser_${version}_amd64.deb";
-    hash = "sha256-UQqYXlkjXuZ3Vkcie0SNp4AMnBjemavW2G7dKGTxVAc=";
+    hash = "sha256-dR5yHJqUtnQe0V+FICZK+0fjenLl8590jDw8cP80yQA=";
   };
 
   nativeBuildInputs =
