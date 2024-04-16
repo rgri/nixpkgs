@@ -1,9 +1,4 @@
-{
-lib,
-stdenv,
-fetchurl,
-appimageTools,
-}:
+{ lib, stdenv, fetchurl, appimageTools, }:
 
 appimageTools.wrapType2 rec {
   pname = "thorium-browser";
@@ -20,6 +15,11 @@ appimageTools.wrapType2 rec {
       install -Dm444 ${contents}/thorium-browser.desktop $out/share/applications/thorium-browser.desktop
       install -Dm444 ${contents}/thorium.png $out/share/icons/hicolor/512x512/apps/thorium.png
       mv $out/bin/thorium-browser* $out/bin/thorium-browser
+      substituteInPlace $out/share/applications/thorium-browser.desktop \
+        --replace /usr/bin $out/bin \
+        --replace StartupWMClass=thorium StartupWMClass=thorium-browser \
+        --replace Icon=thorium Icon=$out/share/icons/hicolor/512x512/apps/thorium.png \
+        --replace Exec=thorium Exec=$out/bin/thorium-browser
     '';
 
   meta = with lib; {
@@ -28,7 +28,7 @@ appimageTools.wrapType2 rec {
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     maintainers = with maintainers; [ rgri ];
     license = licenses.bsd3;
-    platforms = ["x86_64-linux"];
+    platforms = [ "x86_64-linux" ];
     mainProgram = "thorium-browser";
   };
 }
