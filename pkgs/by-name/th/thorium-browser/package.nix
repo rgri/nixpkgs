@@ -28,7 +28,7 @@ appimageTools.wrapType2 rec {
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     maintainers = with maintainers; [ rgri ];
     license = licenses.bsd3;
-    platforms = [ "x86_64-linux" "darwin" ];
+    platforms = [ "x86_64-linux" "aarch64-apple-darwin" ];
     mainProgram = "thorium-browser";
   };
 }
