@@ -303,4 +303,5 @@
 , "@yaegassy/coc-nginx"
 , "yalc"
 , "yarn"
+    , "icsorg"
 ]
