@@ -2,12 +2,12 @@
 
 appimageTools.wrapType2 rec {
   pname = "thorium-browser";
-  version = "122.0.6261.132";
+  version = "124.0.6367.218";
 
   src = fetchurl {
     url =
-      "https://github.com/Alex313031/thorium/releases/download/M${version}/Thorium_Browser_${version}_x64.AppImage";
-    hash = "sha256-P10CI4C6V9vkkCLHhj4FVw6qyrchCpmnO7yDgajJnF8=";
+      "https://github.com/Alex313031/thorium/releases/download/M${version}/Thorium_Browser_${version}_AVX.AppImage";
+    hash = "sha256-xwFB5uPNAaM9JhulJHIdKgWuo+eO0CGCBqUupcs4rnA=";
   };
   extraInstallCommands =
     let contents = appimageTools.extract { inherit pname version src; };
